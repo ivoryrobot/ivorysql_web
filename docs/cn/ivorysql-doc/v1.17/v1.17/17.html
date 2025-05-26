@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Ivorysql框架设计 :: IvorySQL文档中心</title>
-    <link rel="canonical" href="https://docs.ivorysql.org/ivorysql-doc/v1.17/v1.17/11.html">
-    <link rel="prev" href="10.html">
-    <link rel="next" href="12.html">
+    <title>兼容Oracle函数与存储过程 :: IvorySQL文档中心</title>
+    <link rel="canonical" href="https://docs.ivorysql.org/ivorysql-doc/v1.17/v1.17/17.html">
+    <link rel="prev" href="16.html">
+    <link rel="next" href="18.html">
     <meta name="generator" content="Antora 3.1.7">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <script>var uiRootPath = '../../../_'</script>
@@ -99,7 +99,7 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Oracle兼容功能列表</span>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="11.html">1、Ivorysql框架设计</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -117,7 +117,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="16.html">6、兼容Oracle匿名块</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="17.html">7、兼容Oracle函数与存储过程</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -223,79 +223,197 @@
   <ul>
     <li><a href="welcome.html">IvorySQL</a></li>
     <li>Oracle兼容功能列表</li>
-    <li><a href="11.html">1、Ivorysql框架设计</a></li>
+    <li><a href="17.html">7、兼容Oracle函数与存储过程</a></li>
   </ul>
 </nav>
   <div class="page-versions">
   <button class="version-menu-toggle" title="switch to English">CN</button>
   <div class="version-menu">
     <a class="version is-current" href="">CN</a>
-    <a class="version" href="../../../../en/ivorysql-doc/v1.17/v1.17/11.html">EN</a>
+    <a class="version" href="../../../../en/ivorysql-doc/v1.17/v1.17/17.html">EN</a>
   </div>
   </div>
-  <div class="edit-this-page"><a href="https://github.com/IvorySQL/ivorysql_docs/edit/v1.17/CN/modules/ROOT/pages/v1.17/11.adoc">编辑此页面</a></div>
+  <div class="edit-this-page"><a href="https://github.com/IvorySQL/ivorysql_docs/edit/v1.17/CN/modules/ROOT/pages/v1.17/17.adoc">编辑此页面</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="目录" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Ivorysql框架设计</h1>
+<h1 class="page">兼容Oracle函数与存储过程</h1>
 <div class="sect1">
 <h2 id="目的"><a class="anchor" href="#目的"></a>1. 目的</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>为了对原有的postgres改动最小的前提下，实现对oracle兼容。我们需要实现双parser、双端口、模式PLPGSQL实现PL\iSQL的框架。实现流程图如下：</p>
+<p>本文档意在兼容Oracle PLSQL函数和存储过程的语法，在IvorySQL中我们称其为PLISQL语言。</p>
 </li>
 </ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/p18.png" alt="p18">
-</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="功能"><a class="anchor" href="#功能"></a>2. 功能</h2>
+<h2 id="功能说明"><a class="anchor" href="#功能说明"></a>2. 功能说明</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="双端口设计"><a class="anchor" href="#双端口设计"></a>2.1. 双端口设计</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>保持了Ivorysql 5432端口兼容原有postgres情况，因此 Ivorysql采用另一个独立的端口登录，默认为1521。从该端口登录，默认采用oracle兼容模式。如果需要从5432端口登录且还要进入兼容模式，则需要通过compatible_mode参数进行设置;</p>
-</li>
-</ul>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">函数（FUNCTION）</caption>
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE FUNCTION语法支持EDITIONABLE/NONEDITIONABLE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE FUNCTION语法支持RETURN, IS关键字，不指定language</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE FUNCTION语法函数没有参数，函数名后面不带()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE FUNCTION参数个数最多是32767</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE FUNCTION语法中END; 在psql中以/结束</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE FUNCTION语法变量声明前面没有DECLARE关键字</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE FUNCTION语法支持OUT 参数NOCOPY功能</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE FUNCTION语法支持sharing_clause</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE FUNCTION语法支持invoker_rights_clause，默认权限改成DR（DEFINER）</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE FUNCTION语法支持ACCESSIBLE BY</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE FUNCTION语法支持DEFAULT COLLATION</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE FUNCTION语法支持result_cache_clause</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE FUNCTION语法支持aggregate_clause</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE FUNCTION语法支持pipelined_clause</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE FUNCTION语法支持sql_macro_clause</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ALTER FUNCTION语法</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">函数和存储过程相关的视图</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">存储过程（PROCEDURE)</caption>
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE PROCEDURE语法支持EDITIONABLE/NONEDITIONABLE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE PROCEDURE语法函数没有参数，函数名后面不带()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE PROCEDURE参数个数最多是32767</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE PROCEDURE语法中END; 在psql中以/结束</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE PROCEDURE语法支持sharing_clause</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE PROCEDURE语法支持DEFAULT COLLATION</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE PROCEDURE语法支持invoker_rights_clause</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CREATE PROCEDURE语法支持ACCESSIBLE BY</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ALTER PROCEDURE语法</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">存储过程没有参数，调用支持不带（）</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">存储过程调用支持EXEC</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">在PL/SQL 中调用存储过程，可以省略CALL，直接使用存储过程名字</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">支持&#8212;&#8203;和/**/两种注释方法</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="parser模块设计"><a class="anchor" href="#parser模块设计"></a>2.2. parser模块设计</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>为了将Oracle语法与postgres语法间的相互干扰降到最低，因此新增parser模块，用于处理Oracle相关的语法;</p>
-</li>
-</ul>
+<div class="sect1">
+<h2 id="测试用例"><a class="anchor" href="#测试用例"></a>3. 测试用例</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">CREATE or replace FUNCTION ora_func RETURN integer AS
+BEGIN
+    RETURN 1;
+END;
+/
+
+CREATE OR REPLACE FUNCTION test_nocopy(a IN int, b OUT NOCOPY int, c IN OUT NOCOPY int)
+RETURN record
+IS
+BEGIN
+   b := a;
+   c := a;
+END;
+/</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="新增plisql过程语言"><a class="anchor" href="#新增plisql过程语言"></a>2.3. 新增PL\iSQL过程语言</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>同样为了减少Oracle兼容与postgres语法不同而导致测试用例冲突得情况，因此单独设计了一套Oracle专用的测试用例。该套测试用例由postgres原有测试框架拷贝修改而来;</p>
-</li>
-</ul>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">CREATE OR REPLACE PROCEDURE ora_procedure()
+AS
+	p integer := 20;
+begin
+	raise notice '%', p;
+end;
+/
+call ora_procedure();
+
+CREATE OR REPLACE PROCEDURE ora_procedure
+SHARING = METADATA
+DEFAULT COLLATION USING_NLS_COMP
+AUTHID CURRENT_USER
+ACCESSIBLE BY ( FUNCTION A.B )
+IS
+	p integer := 20;
+begin
+	raise notice '%', p;
+end;
+/</code></pre>
 </div>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="10.html">pgvector</a></span>
-  <span class="next"><a href="12.html">2、GUC框架</a></span>
+  <span class="prev"><a href="16.html">6、兼容Oracle匿名块</a></span>
+  <span class="next"><a href="18.html">8、内置数据类型与内置函数</a></span>
 </nav>
 </article>
   </div>
