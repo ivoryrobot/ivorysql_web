@@ -1,0 +1,53 @@
+name: Auto-merge PRs from ivoryrobot
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+    branches:
+      - master
+
+jobs:
+  auto_merge_if_author_is_ivoryrobot:
+    runs-on: ubuntu-latest
+
+    if: |
+      github.actor == 'ivoryrobot' &&
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.merged == false &&
+      github.event.pull_request.state == 'open'
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository (for gh CLI context)
+        uses: actions/checkout@v4
+
+      - name: Log PR Details
+        run: |
+          echo "PR Number: ${{ github.event.pull_request.number }}"
+          echo "PR URL: ${{ github.event.pull_request.html_url }}"
+          echo "PR Creator (Actor): ${{ github.actor }}"
+          echo "PR Head branch: ${{ github.event.pull_request.head.ref }}"
+          echo "PR Base branch: ${{ github.event.pull_request.base.ref }}"
+          echo "PR Title: ${{ github.event.pull_request.title }}"
+
+      - name: Auto-merge Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          MERGE_STRATEGY: MERGE 
+        run: |
+          echo "Attempting to auto-merge PR: $PR_URL"
+          echo "Merge strategy: $MERGE_STRATEGY"
+
+          gh pr merge "$PR_URL" \
+            --${MERGE_STRATEGY,,} \
+            --delete-branch \
+            --body "✅ PR automatically merged by workflow because author is ivoryrobot." \
+            || echo "::warning::PR merge failed. This could be due to conflicts, pending status checks, required reviews, or other branch protection rules not being met."
