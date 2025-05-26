@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Ivorysql框架设计 :: IvorySQL文档中心</title>
-    <link rel="canonical" href="https://docs.ivorysql.org/ivorysql-doc/v1.17/v1.17/11.html">
-    <link rel="prev" href="10.html">
-    <link rel="next" href="12.html">
+    <title>兼容Oracle like :: IvorySQL文档中心</title>
+    <link rel="canonical" href="https://docs.ivorysql.org/ivorysql-doc/v1.17/v1.17/15.html">
+    <link rel="prev" href="14.html">
+    <link rel="next" href="16.html">
     <meta name="generator" content="Antora 3.1.7">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <script>var uiRootPath = '../../../_'</script>
@@ -99,7 +99,7 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Oracle兼容功能列表</span>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="11.html">1、Ivorysql框架设计</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -111,7 +111,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="14.html">4、双模式设计</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="15.html">5、兼容Oracle like</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -223,79 +223,118 @@
   <ul>
     <li><a href="welcome.html">IvorySQL</a></li>
     <li>Oracle兼容功能列表</li>
-    <li><a href="11.html">1、Ivorysql框架设计</a></li>
+    <li><a href="15.html">5、兼容Oracle like</a></li>
   </ul>
 </nav>
   <div class="page-versions">
   <button class="version-menu-toggle" title="switch to English">CN</button>
   <div class="version-menu">
     <a class="version is-current" href="">CN</a>
-    <a class="version" href="../../../../en/ivorysql-doc/v1.17/v1.17/11.html">EN</a>
+    <a class="version" href="../../../../en/ivorysql-doc/v1.17/v1.17/15.html">EN</a>
   </div>
   </div>
-  <div class="edit-this-page"><a href="https://github.com/IvorySQL/ivorysql_docs/edit/v1.17/CN/modules/ROOT/pages/v1.17/11.adoc">编辑此页面</a></div>
+  <div class="edit-this-page"><a href="https://github.com/IvorySQL/ivorysql_docs/edit/v1.17/CN/modules/ROOT/pages/v1.17/15.adoc">编辑此页面</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="目录" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Ivorysql框架设计</h1>
+<h1 class="page">兼容Oracle like</h1>
 <div class="sect1">
 <h2 id="目的"><a class="anchor" href="#目的"></a>1. 目的</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>为了对原有的postgres改动最小的前提下，实现对oracle兼容。我们需要实现双parser、双端口、模式PLPGSQL实现PL\iSQL的框架。实现流程图如下：</p>
+<p>本文档意在为使用 like 模糊查询的人员提供一个深入了解兼容Oracle 的模糊查询like实现的过程，是like兼容的实现文档。</p>
 </li>
 </ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/p18.png" alt="p18">
-</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="功能"><a class="anchor" href="#功能"></a>2. 功能</h2>
+<h2 id="功能说明"><a class="anchor" href="#功能说明"></a>2. 功能说明</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="双端口设计"><a class="anchor" href="#双端口设计"></a>2.1. 双端口设计</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>保持了Ivorysql 5432端口兼容原有postgres情况，因此 Ivorysql采用另一个独立的端口登录，默认为1521。从该端口登录，默认采用oracle兼容模式。如果需要从5432端口登录且还要进入兼容模式，则需要通过compatible_mode参数进行设置;</p>
-</li>
-</ul>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">数据库名称</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">like模糊查询</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">oracle</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">oracle的字符串类型是varchar2，支持对数字、日期、字符串字段类型的列用Like关键字配合通配符来实现模糊查询</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IvorySQL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IvorySQL的字符串基本类型是text，所以like是以text为基础上，其他IvorySQL的类型能隐式转换成text，这样不用创建opeartor就能自动转换</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="parser模块设计"><a class="anchor" href="#parser模块设计"></a>2.2. parser模块设计</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>为了将Oracle语法与postgres语法间的相互干扰降到最低，因此新增parser模块，用于处理Oracle相关的语法;</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="新增plisql过程语言"><a class="anchor" href="#新增plisql过程语言"></a>2.3. 新增PL\iSQL过程语言</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>同样为了减少Oracle兼容与postgres语法不同而导致测试用例冲突得情况，因此单独设计了一套Oracle专用的测试用例。该套测试用例由postgres原有测试框架拷贝修改而来;</p>
-</li>
-</ul>
+<div class="sect1">
+<h2 id="测试用例"><a class="anchor" href="#测试用例"></a>3. 测试用例</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">create table t_ora_like (id int ,str1 varchar(8), date1 timestamp with time zone, date2 time with time zone, num int, str2 varchar(8));
+insert into t_ora_like (id ,str1 ,date1 ,date2) values (123456,'test1','2022-09-26 16:39:20','2022-09-26 16:39:20');
+insert into t_ora_like (id ,str1 ,date1 ,date2) values (123457,'test2','2022-09-26 16:40:20','2022-09-26 16:40:20');
+insert into t_ora_like (id ,str1 ,date1 ,date2) values (223456,'test3','2022-09-26 16:41:20','2022-09-26 16:41:20');
+insert into t_ora_like (id ,str1 ,date1 ,date2) values (123458,'test4','2022-09-26 16:42:20','2022-09-26 16:42:20');
+
+select * from t_ora_like where str1 like 'test%';
+   id   | str1  |               date1               |    date2    | num | str2
+--------+-------+-----------------------------------+-------------+-----+------
+ 123456 | test1 | 2022-09-26 16:39:20.000000 +08:00 | 16:39:20+08 |     |
+ 123457 | test2 | 2022-09-26 16:40:20.000000 +08:00 | 16:40:20+08 |     |
+ 223456 | test3 | 2022-09-26 16:41:20.000000 +08:00 | 16:41:20+08 |     |
+ 123458 | test4 | 2022-09-26 16:42:20.000000 +08:00 | 16:42:20+08 |     |
+(4 rows)
+
+select * from t_ora_like where date1 like '2022%';
+   id   | str1  |               date1               |    date2    | num | str2
+--------+-------+-----------------------------------+-------------+-----+------
+ 123456 | test1 | 2022-09-26 16:39:20.000000 +08:00 | 16:39:20+08 |     |
+ 123457 | test2 | 2022-09-26 16:40:20.000000 +08:00 | 16:40:20+08 |     |
+ 223456 | test3 | 2022-09-26 16:41:20.000000 +08:00 | 16:41:20+08 |     |
+ 123458 | test4 | 2022-09-26 16:42:20.000000 +08:00 | 16:42:20+08 |     |
+(4 rows)
+
+select * from t_ora_like where date2 like '16%';
+   id   | str1  |               date1               |    date2    | num | str2
+--------+-------+-----------------------------------+-------------+-----+------
+ 123456 | test1 | 2022-09-26 16:39:20.000000 +08:00 | 16:39:20+08 |     |
+ 123457 | test2 | 2022-09-26 16:40:20.000000 +08:00 | 16:40:20+08 |     |
+ 223456 | test3 | 2022-09-26 16:41:20.000000 +08:00 | 16:41:20+08 |     |
+ 123458 | test4 | 2022-09-26 16:42:20.000000 +08:00 | 16:42:20+08 |     |
+(4 rows)
+
+select * from t_ora_like where id like '123%';
+   id   | str1  |               date1               |    date2    | num | str2
+--------+-------+-----------------------------------+-------------+-----+------
+ 123456 | test1 | 2022-09-26 16:39:20.000000 +08:00 | 16:39:20+08 |     |
+ 123457 | test2 | 2022-09-26 16:40:20.000000 +08:00 | 16:40:20+08 |     |
+ 123458 | test4 | 2022-09-26 16:42:20.000000 +08:00 | 16:42:20+08 |     |
+(3 rows)
+
+select * from t_ora_like where id like null;
+ id | str1 | date1 | date2 | num | str2
+----+------+-------+-------+-----+------
+(0 rows)</code></pre>
 </div>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="10.html">pgvector</a></span>
-  <span class="next"><a href="12.html">2、GUC框架</a></span>
+  <span class="prev"><a href="14.html">4、双模式设计</a></span>
+  <span class="next"><a href="16.html">6、兼容Oracle匿名块</a></span>
 </nav>
 </article>
   </div>

@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Dual-mode design :: IvorySQL Document Site</title>
-    <link rel="canonical" href="https://docs.ivorysql.org/ivorysql-doc/v1.17/v1.17/14.html">
-    <link rel="prev" href="13.html">
-    <link rel="next" href="15.html">
+    <title>Added Oracle compatibility mode ports and IP :: IvorySQL Document Site</title>
+    <link rel="canonical" href="https://docs.ivorysql.org/ivorysql-doc/v1.17/v1.17/19.html">
+    <link rel="prev" href="18.html">
+    <link rel="next" href="20.html">
     <meta name="generator" content="Antora 3.1.7">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <script>var uiRootPath = '../../../_'</script>
@@ -108,7 +108,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="13.html">3、Case conversion</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="14.html">4、Dual-mode design</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -123,7 +123,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="18.html">8、Built-in data types and built-in functions</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="19.html">9、Added Oracle compatibility mode ports and IP</a>
   </li>
 </ul>
@@ -223,31 +223,31 @@
   <ul>
     <li><a href="welcome.html">IvorySQL</a></li>
     <li>List of Oracle compatible features</li>
-    <li><a href="14.html">4、Dual-mode design</a></li>
+    <li><a href="19.html">9、Added Oracle compatibility mode ports and IP</a></li>
   </ul>
 </nav>
   <div class="page-versions">
   <button class="version-menu-toggle" title="switch to Chinese">EN</button>
   <div class="version-menu">
     <a class="version is-current" href="">EN</a>
-    <a class="version" href="../../../../cn/ivorysql-doc/v1.17/v1.17/14.html">CN</a>
+    <a class="version" href="../../../../cn/ivorysql-doc/v1.17/v1.17/19.html">CN</a>
   </div>
   </div>
-  <div class="edit-this-page"><a href="https://github.com/IvorySQL/ivorysql_docs/edit/v1.17/EN/modules/ROOT/pages/v1.17/14.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/IvorySQL/ivorysql_docs/edit/v1.17/EN/modules/ROOT/pages/v1.17/19.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Dual-mode design</h1>
+<h1 class="page">Added Oracle compatibility mode ports and IP</h1>
 <div class="sect1">
 <h2 id="objective"><a class="anchor" href="#objective"></a>1. Objective</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>In order to meet the PG mode and the compatible Oracle mode, IVORYSQL designed two modes: PG and Oracle. And the schema can be specified at initdb time;</p>
+<p>In order to distinguish the Oracle port, IP and PG port IP. THERE IS NOW A NEED TO INCREASE THE PROCESSING OF ORAPORT AND ORAHOST;</p>
 </li>
 </ul>
 </div>
@@ -259,43 +259,35 @@
 <div class="ulist">
 <ul>
 <li>
-<p>Initdb -m initialization requires judgment of different modes, among which oracle mode requires the execution of SQL statements postgres_oracle.bki. The default is Oracle compatibility mode, and the process is as follows:</p>
+<p>Add ivoryhost: You need to add the parameter ivoryhost when connecting, and its function is similar to host;</p>
 </li>
 <li>
-<p>Startup: When starting, it determines whether it is an Oracle compatibility mode based on the initialization mode;</p>
+<p>New ivoryport: Compared to host, the function of port is relatively complex. It involves specifying ports in the configure phase and connection phase;</p>
 </li>
 </ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">Description:
-database_mode: Used to indicate initialization mode;
-database_mode=DB_PG，PG mode, and cannot be switched;
-database_mode=DB_ORACLE， oracle compatibility mode;</code></pre>
-</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="test-cases"><a class="anchor" href="#test-cases"></a>3. Test cases</h2>
+<h2 id="test-method"><a class="anchor" href="#test-method"></a>3. Test method:</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">Initialize the PG mode:
-./initdb -D ../data -m pg
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">   ./configure --with-oraport=5555
+   ./initdb ....
+   ./pg_ctl -D ../data start
 
-Initialize the Oracle compatibility mode:
-./initdb -D ../data -m oracle
-
-or
-./initdb -D ../data</code></pre>
+   ./pg_ctl -o “-p 5433 -o 1522” -D ../data</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>​</p>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="13.html">3、Case conversion</a></span>
-  <span class="next"><a href="15.html">5、Compatible with Oracle like</a></span>
+  <span class="prev"><a href="18.html">8、Built-in data types and built-in functions</a></span>
+  <span class="next"><a href="20.html">Community contribution</a></span>
 </nav>
 </article>
   </div>
