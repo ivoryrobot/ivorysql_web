@@ -283,8 +283,7 @@
 </aside>
 <article class="doc">
 <h1 class="page">迁移指南</h1>
-<div class="sect1">
-<h2 id="迁移概述"><a class="anchor" href="#迁移概述"></a>1. 迁移概述</h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>数据库迁移是指将数据从一个数据库转移到另一个数据库的过程，两端的数据库可能是PostgreSQL, IvorySQL, MySQL, Oracle, SQL Server等。迁移过程是一个具有挑战性的复杂过程，需要对数据库的原理以及各自的特性了如指掌。如果应用已经部署到生产环境并处于正常运行状态，为了保持业务不中断运行，并且不发生数据丢失，数据库迁移后需进行平滑的应用迁移。</p>
@@ -311,7 +310,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="迁移工具ora2pg"><a class="anchor" href="#迁移工具ora2pg"></a>2. 迁移工具Ora2Pg</h2>
+<h2 id="迁移工具ora2pg"><a class="anchor" href="#迁移工具ora2pg"></a>1. 迁移工具Ora2Pg</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Ora2Pg 是一个免费的工具，用于将 Oracle 数据库迁移到 IvorySQL 兼容的模式。它连接您的 Oracle 数据库，自动扫描并提取它的结构或数据，然后生成可以装载到 IvorySQL 数据库的 SQL 脚本。Ora2Pg 可以从逆向工程 Oracle 数据库到大型企业数据库迁移，或者简单地将一些 Oracle 数据复制到 IvorySQL 数据库中。它非常容易使用，并且不需要任何 Oracle 数据库知识，而不需要提供连接到Oracle数据库所需的参数。</p>
@@ -365,10 +364,10 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="迁移oracle数据库至ivorysql"><a class="anchor" href="#迁移oracle数据库至ivorysql"></a>3. 迁移Oracle数据库至IvorySQL</h2>
+<h2 id="迁移oracle数据库至ivorysql"><a class="anchor" href="#迁移oracle数据库至ivorysql"></a>2. 迁移Oracle数据库至IvorySQL</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="环境准备"><a class="anchor" href="#环境准备"></a>3.1. 环境准备</h3>
+<h3 id="环境准备"><a class="anchor" href="#环境准备"></a>2.1. 环境准备</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -390,9 +389,9 @@
 </table>
 </div>
 <div class="sect2">
-<h3 id="依赖环境安装"><a class="anchor" href="#依赖环境安装"></a>3.2. 依赖环境安装</h3>
+<h3 id="依赖环境安装"><a class="anchor" href="#依赖环境安装"></a>2.2. 依赖环境安装</h3>
 <div class="sect3">
-<h4 id="安装perl"><a class="anchor" href="#安装perl"></a>3.2.1. 安装Perl</h4>
+<h4 id="安装perl"><a class="anchor" href="#安装perl"></a>2.2.1. 安装Perl</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@localhost /]# dnf install -y perl perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker
@@ -417,7 +416,7 @@ Internet, point your browser at http://www.perl.org/, the Perl Home Page.</code>
 </div>
 </div>
 <div class="sect3">
-<h4 id="安装dbi模块"><a class="anchor" href="#安装dbi模块"></a>3.2.2. 安装DBI模块</h4>
+<h4 id="安装dbi模块"><a class="anchor" href="#安装dbi模块"></a>2.2.2. 安装DBI模块</h4>
 <div class="paragraph">
 <p>DBI，Database Independent Interface，是 Perl 语言连接数据库的接口</p>
 </div>
@@ -434,7 +433,7 @@ Internet, point your browser at http://www.perl.org/, the Perl Home Page.</code>
 </div>
 </div>
 <div class="sect3">
-<h4 id="安装dbd-oracle"><a class="anchor" href="#安装dbd-oracle"></a>3.2.3. 安装DBD-Oracle</h4>
+<h4 id="安装dbd-oracle"><a class="anchor" href="#安装dbd-oracle"></a>2.2.3. 安装DBD-Oracle</h4>
 <div class="paragraph">
 <p>下载地址：https://sourceforge.net/projects/ora2pg/</p>
 </div>
@@ -453,7 +452,7 @@ Internet, point your browser at http://www.perl.org/, the Perl Home Page.</code>
 </div>
 </div>
 <div class="sect2">
-<h3 id="安装ora2pg"><a class="anchor" href="#安装ora2pg"></a>3.3. 安装Ora2pg</h3>
+<h3 id="安装ora2pg"><a class="anchor" href="#安装ora2pg"></a>2.3. 安装Ora2pg</h3>
 <div class="paragraph">
 <p>下载地址：https://sourceforge.net/projects/ora2pg/</p>
 </div>
@@ -542,7 +541,7 @@ VIEW
 </div>
 </div>
 <div class="sect2">
-<h3 id="ora2pg导出表结构"><a class="anchor" href="#ora2pg导出表结构"></a>3.4. ora2pg导出表结构</h3>
+<h3 id="ora2pg导出表结构"><a class="anchor" href="#ora2pg导出表结构"></a>2.4. ora2pg导出表结构</h3>
 <div class="paragraph">
 <p><strong>配置ora2pg.conf:</strong></p>
 </div>
@@ -591,7 +590,7 @@ OUTPUT     sh.sql</code></pre>
 </blockquote>
 </div>
 <div class="sect3">
-<h4 id="测试连接"><a class="anchor" href="#测试连接"></a>3.4.1. <strong>测试连接</strong></h4>
+<h4 id="测试连接"><a class="anchor" href="#测试连接"></a>2.4.1. <strong>测试连接</strong></h4>
 <div class="paragraph">
 <p>设置Oracle数据库DSN后，您可以执行ora2pg以查看它是否有效：</p>
 </div>
@@ -604,7 +603,7 @@ Oracle Database 19c Enterprise Edition Release 19.0.0.0.0</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="迁移成本评估"><a class="anchor" href="#迁移成本评估"></a>3.4.2. 迁移成本评估</h4>
+<h4 id="迁移成本评估"><a class="anchor" href="#迁移成本评估"></a>2.4.2. 迁移成本评估</h4>
 <div class="paragraph">
 <p>估算从Oracle到PostgreSQL的迁移过程的成本并不容易。为了获得对此迁移成本的良好评估，Ora2Pg将检查所有数据库对象，所有函数和存储过程，以检测是否仍有一些对象和PL / SQL代码无法由Ora2Pg自动转换。</p>
 </div>
@@ -675,7 +674,7 @@ Technical levels:
 </div>
 </div>
 <div class="sect3">
-<h4 id="导出sh表构"><a class="anchor" href="#导出sh表构"></a>3.4.3. <strong>导出SH表构</strong></h4>
+<h4 id="导出sh表构"><a class="anchor" href="#导出sh表构"></a>2.4.3. <strong>导出SH表构</strong></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">#  ora2pg  -c ora2pg.conf
@@ -711,7 +710,7 @@ Fixing function calls in output files....</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="导出sh用户数据"><a class="anchor" href="#导出sh用户数据"></a>3.4.4. <strong>导出SH用户数据</strong></h4>
+<h4 id="导出sh用户数据"><a class="anchor" href="#导出sh用户数据"></a>2.4.4. <strong>导出SH用户数据</strong></h4>
 <div class="paragraph">
 <p>配置ora2pg.conf 的TYPE 为COPY 或 INSERT</p>
 </div>
@@ -832,7 +831,7 @@ Fixing function calls in output files...</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="在ivorysql环境中创建orcl库"><a class="anchor" href="#在ivorysql环境中创建orcl库"></a>3.5. 在IvorySQL环境中创建orcl库</h3>
+<h3 id="在ivorysql环境中创建orcl库"><a class="anchor" href="#在ivorysql环境中创建orcl库"></a>2.5. 在IvorySQL环境中创建orcl库</h3>
 <div class="paragraph">
 <p>创建ORCL 数据库</p>
 </div>
@@ -894,10 +893,10 @@ CREATE ROLE</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="迁移门户"><a class="anchor" href="#迁移门户"></a>4. 迁移门户</h2>
+<h2 id="迁移门户"><a class="anchor" href="#迁移门户"></a>3. 迁移门户</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="导入表结构"><a class="anchor" href="#导入表结构"></a>4.1. 导入表结构</h3>
+<h3 id="导入表结构"><a class="anchor" href="#导入表结构"></a>3.1. 导入表结构</h3>
 <div class="paragraph">
 <p>由于有物化视图，在TABLE_sh.sql 里包含了物化视图的索引，会创建失败。需先创建表，在创建物化视图，最后创建索引。</p>
 </div>
@@ -938,7 +937,7 @@ ALTER TABLE
 </div>
 </div>
 <div class="sect2">
-<h3 id="给对象授权"><a class="anchor" href="#给对象授权"></a>4.2. 给对象授权</h3>
+<h3 id="给对象授权"><a class="anchor" href="#给对象授权"></a>3.2. 给对象授权</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cat psql orcl  -f  GRANT_sh.sql
@@ -949,7 +948,7 @@ GRANT ALL ON  sh.fweek_pscat_sales_mv TO sh;</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="导入物化视图结构"><a class="anchor" href="#导入物化视图结构"></a>4.3. 导入物化视图结构</h3>
+<h3 id="导入物化视图结构"><a class="anchor" href="#导入物化视图结构"></a>3.3. 导入物化视图结构</h3>
 <div class="paragraph">
 <p>物化视图需要相关查询权限,所以导入权限,注意这里要跟上用户</p>
 </div>
@@ -966,7 +965,7 @@ CREATE INDEX</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="导入视图"><a class="anchor" href="#导入视图"></a>4.4. 导入视图</h3>
+<h3 id="导入视图"><a class="anchor" href="#导入视图"></a>3.4. 导入视图</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">$  psql orcl  -f  VIEW_sh.sql
@@ -978,7 +977,7 @@ CREATE VIEW</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="导入分区表"><a class="anchor" href="#导入分区表"></a>4.5. 导入分区表</h3>
+<h3 id="导入分区表"><a class="anchor" href="#导入分区表"></a>3.5. 导入分区表</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">$  psql orcl  -f  PARTITION_sh.sql
@@ -996,7 +995,7 @@ CREATE TABLE
 </div>
 </div>
 <div class="sect2">
-<h3 id="导入数据"><a class="anchor" href="#导入数据"></a>4.6. 导入数据</h3>
+<h3 id="导入数据"><a class="anchor" href="#导入数据"></a>3.6. 导入数据</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">$  psql orcl   -f   sh_data.sql
@@ -1025,7 +1024,7 @@ COMMIT</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="数据验证"><a class="anchor" href="#数据验证"></a>5. 数据验证</h2>
+<h2 id="数据验证"><a class="anchor" href="#数据验证"></a>4. 数据验证</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>源库,目标端抽取部份对象对比：</p>
@@ -1078,7 +1077,7 @@ orcl=# select count(*) from sh.customers ;
 </div>
 </div>
 <div class="sect1">
-<h2 id="生成迁移模板"><a class="anchor" href="#生成迁移模板"></a>6. 生成迁移模板</h2>
+<h2 id="生成迁移模板"><a class="anchor" href="#生成迁移模板"></a>5. 生成迁移模板</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>使用时，两个选项&#8212;&#8203;project_base和&#8212;&#8203;init_project向Ora2Pg表明他必须创建一个项目模板，其中包含工作树，配置文件和从Oracle数据库导出所有对象的脚本。 生成通用配置文件。 1.创建脚本export_schema.sh以自动执行所有导出。2.创建脚本import_all.sh以自动执行所有导入。例：</p>
